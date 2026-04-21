@@ -11,11 +11,8 @@ let editType = null;
 function showSection(id) {
   const sections = document.querySelectorAll('.section');
   sections.forEach(s => s.classList.remove('active'));
-  
   const target = document.getElementById(id);
-  if (target) {
-    target.classList.add('active');
-  }
+  if (target) target.classList.add('active');
 }
 
 // دالة تنظيف الخانات
@@ -25,24 +22,38 @@ function clearInputs() {
   editType = null;
 }
 
+// --- دالات التحقق (Validation) ---
+
+// التأكد أن النص يحتوي على حروف فقط
+function isText(val) {
+    return /^[a-zA-Z\u0600-\u06FF\s]+$/.test(val);
+}
+
+// التأكد أن النص يحتوي على أرقام فقط
+function isNumber(val) {
+    return /^\d+$/.test(val);
+}
+
 /* ================== ANIMALS ================== */
 function addAnimal() {
-  const type = document.getElementById('a_type').value;
-  const age = document.getElementById('a_age').value;
-  const health = document.getElementById('a_health').value;
-  const code = document.getElementById('a_code').value;
+  const type = document.getElementById('a_type').value.trim();
+  const age = document.getElementById('a_age').value.trim();
+  const health = document.getElementById('a_health').value.trim();
+  const code = document.getElementById('a_code').value.trim();
 
-  // التحقق من الحقول الفارغة
-  if(!type || !age || !health || !code) {
-      alert("يرجى ملء جميع خانات الحيوان");
-      return;
-  }
+  // التحقق من البيانات
+  if(!type || !age || !health || !code) return alert("يرجى ملء جميع الخانات");
+  if(!isText(type)) return alert("خانة 'النوع' يجب أن تحتوي على حروف فقط");
+  if(!isNumber(age)) return alert("خانة 'العمر' يجب أن تكون أرقاماً فقط");
+  if(code.length !== 10 || !isNumber(code)) return alert("الرقم التعريفي يجب أن يكون 10 أرقام بالضبط");
 
   let data = Storage.get("animals");
+  const obj = { id: editType === "animal" ? editId : Date.now(), type, age, health, code };
+
   if (editType === "animal") {
-    data = data.map(a => a.id === editId ? {id: editId, type, age, health, code} : a);
+    data = data.map(a => a.id === editId ? obj : a);
   } else {
-    data.push({ id: Date.now(), type, age, health, code });
+    data.push(obj);
   }
 
   Storage.set("animals", data);
@@ -76,20 +87,20 @@ function deleteAnimal(id) {
 
 /* ================== WORKERS ================== */
 function addWorker() {
-  const name = document.getElementById('w_name').value;
-  const job = document.getElementById('w_job').value;
-  const phone = document.getElementById('w_phone').value;
+  const name = document.getElementById('w_name').value.trim();
+  const job = document.getElementById('w_job').value.trim();
+  const phone = document.getElementById('w_phone').value.trim();
 
-  if(!name || !job || !phone) {
-      alert("يرجى إدخال كافة بيانات العامل");
-      return;
-  }
+  if(!name || !job || !phone) return alert("يرجى إدخال كافة بيانات العامل");
+  if(!isText(name)) return alert("اسم العامل يجب أن يكون حروفاً فقط");
+  if(!isNumber(phone)) return alert("رقم الهاتف يجب أن يكون أرقاماً فقط");
 
   let data = Storage.get("workers");
+  const obj = { id: editType === "worker" ? editId : Date.now(), name, job, phone };
   if (editType === "worker") {
-    data = data.map(w => w.id === editId ? {id: editId, name, job, phone} : w);
+    data = data.map(w => w.id === editId ? obj : w);
   } else {
-    data.push({ id: Date.now(), name, job, phone });
+    data.push(obj);
   }
   Storage.set("workers", data);
   renderWorkers();
@@ -121,19 +132,18 @@ function deleteWorker(id) {
 
 /* ================== FEEDS ================== */
 function addFeed() {
-  const name = document.getElementById('f_name').value;
-  const qty = document.getElementById('f_qty').value;
+  const name = document.getElementById('f_name').value.trim();
+  const qty = document.getElementById('f_qty').value.trim();
 
-  if(!name || !qty) {
-      alert("يرجى إدخال اسم العلف والكمية");
-      return;
-  }
+  if(!name || !qty) return alert("يرجى إدخال اسم العلف والكمية");
+  if(!isNumber(qty)) return alert("الكمية يجب أن تكون أرقاماً فقط");
 
   let data = Storage.get("feeds");
+  const obj = {id: editType === "feed" ? editId : Date.now(), name, qty};
   if (editType === "feed") {
-    data = data.map(f => f.id === editId ? {id: editId, name, qty} : f);
+    data = data.map(f => f.id === editId ? obj : f);
   } else {
-    data.push({id: Date.now(), name, qty});
+    data.push(obj);
   }
   Storage.set("feeds", data);
   renderFeeds();
@@ -161,21 +171,20 @@ function deleteFeed(id) {
 
 /* ================== VISITS ================== */
 function addVisit() {
-  const vet = document.getElementById('v_vet').value;
-  const animal = document.getElementById('v_animal').value;
+  const vet = document.getElementById('v_vet').value.trim();
+  const animal = document.getElementById('v_animal').value.trim();
   const date = document.getElementById('v_date').value;
-  const diag = document.getElementById('v_diag').value;
+  const diag = document.getElementById('v_diag').value.trim();
 
-  if(!vet || !animal || !date || !diag) {
-      alert("يرجى ملء جميع بيانات الزيارة الطبية");
-      return;
-  }
+  if(!vet || !animal || !date || !diag) return alert("يرجى ملء جميع بيانات الزيارة");
+  if(!isText(vet)) return alert("اسم الطبيب يجب أن يكون حروفاً فقط");
 
   let data = Storage.get("visits");
+  const obj = {id: editType === "visit" ? editId : Date.now(), vet, animal, date, diag};
   if (editType === "visit") {
-    data = data.map(v => v.id === editId ? {id: editId, vet, animal, date, diag} : v);
+    data = data.map(v => v.id === editId ? obj : v);
   } else {
-    data.push({id: Date.now(), vet, animal, date, diag});
+    data.push(obj);
   }
   Storage.set("visits", data);
   renderVisits();
