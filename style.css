@@ -8,25 +8,25 @@
 body {
   display: flex;
   direction: rtl;
-  background: #eef2f7;
-  color: #1f2937;
+  background: #f1f5f9; /* خلفية أفتح وأهدأ */
+  color: #334155; /* لون نص رمادي غامق بدل الأسود الصريح */
 }
 
 /* ===== Sidebar ===== */
 .sidebar {
   width: 240px;
   height: 100vh;
-  background: linear-gradient(180deg, #0f172a, #1e293b);
+  background: linear-gradient(180deg, #334155, #475569); /* ألوان هادئة للمستطيل الجانبي */
   color: white;
   padding: 20px;
   position: fixed;
-  box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
 }
 
 .sidebar h2 {
   margin-bottom: 25px;
   font-size: 20px;
-  color: #38bdf8;
+  color: #cbd5e1; /* لون فاتح هادئ للعناوين */
 }
 
 .sidebar button {
@@ -35,8 +35,8 @@ body {
   margin: 6px 0;
   border: none;
   border-radius: 10px;
-  background: rgba(255,255,255,0.08);
-  color: white;
+  background: rgba(255,255,255,0.05);
+  color: #f1f5f9;
   cursor: pointer;
   transition: 0.3s;
   text-align: right;
@@ -44,8 +44,8 @@ body {
 }
 
 .sidebar button:hover {
-  background: #38bdf8;
-  color: #0f172a;
+  background: #64748b; /* لون رمادي مزرق متوسط عند التمرير */
+  color: white;
   transform: translateX(-3px);
 }
 
@@ -63,8 +63,8 @@ body {
   background: white;
   padding: 25px;
   border-radius: 14px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-  border-top: 4px solid #38bdf8;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+  border-top: 4px solid #94a3b8; /* شريط علوي بلون رمادي هادئ */
 }
 
 .section.active {
@@ -74,24 +74,24 @@ body {
 /* ===== Title ===== */
 h2 {
   margin-bottom: 15px;
-  color: #0f172a;
+  color: #1e293b;
 }
 
 /* ===== Inputs ===== */
 input {
   padding: 10px 12px;
   margin: 6px;
-  border: 1px solid #d1d5db;
+  border: 1px solid #cbd5e1;
   border-radius: 10px;
   width: 200px;
   outline: none;
   transition: 0.2s;
-  background: #f9fafb;
+  background: #f8fafc;
 }
 
 input:focus {
-  border-color: #38bdf8;
-  box-shadow: 0 0 0 3px rgba(56,189,248,0.2);
+  border-color: #94a3b8;
+  box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.2);
 }
 
 /* ===== Buttons ===== */
@@ -100,7 +100,7 @@ button {
   margin: 6px;
   border: none;
   border-radius: 10px;
-  background: #2563eb;
+  background: #475569; /* لون الأزرار الأساسي الهادئ */
   color: white;
   cursor: pointer;
   transition: 0.3s;
@@ -108,7 +108,7 @@ button {
 }
 
 button:hover {
-  background: #1d4ed8;
+  background: #334155; /* درجة أغمق قليلاً عند التمرير */
   transform: translateY(-2px);
 }
 
@@ -120,11 +120,11 @@ table {
   background: white;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.03);
 }
 
 th {
-  background: linear-gradient(90deg, #38bdf8, #60a5fa);
+  background: linear-gradient(90deg, #64748b, #94a3b8); /* تدرج ألوان هادئ لرأس الجدول */
   color: white;
   padding: 12px;
   font-size: 14px;
@@ -140,22 +140,16 @@ tr:hover {
   background: #f8fafc;
 }
 
-/* ===== Cards (لو تستخدم Dashboard) ===== */
-.stats {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 20px;
-}
-
+/* ===== Cards ===== */
 .card {
   flex: 1;
-  background: linear-gradient(135deg, #ffffff, #f1f5f9);
+  background: linear-gradient(135deg, #ffffff, #f8fafc);
   padding: 15px;
   border-radius: 14px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.03);
   text-align: center;
   font-weight: bold;
-  border-left: 4px solid #38bdf8;
+  border-left: 4px solid #94a3b8;
 }
 
 /* ===== Responsive ===== */
@@ -171,9 +165,5 @@ tr:hover {
 
   input {
     width: 100%;
-  }
-
-  .stats {
-    flex-direction: column;
   }
 }
