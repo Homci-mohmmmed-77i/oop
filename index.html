@@ -27,7 +27,7 @@
         <button onclick="addAnimal()">➕ إضافة</button>
     </div>
     <div class="table-controls card">
-        <input type="text" id="searchAnimal" placeholder="🔍 ابحث هنا..." oninput="searchTable('animals')">
+        <input type="text" id="searchAnimal" placeholder="🔍 ابحث بالنوع أو الكود..." oninput="searchTable('animals')">
         <button class="export-btn" onclick="exportToExcel('animalsTable', 'حيوانات_المزرعة')">📥 تصدير Excel</button>
     </div>
     <table id="animalsTable"></table>
@@ -42,7 +42,7 @@
         <button onclick="addWorker()">➕ إضافة</button>
     </div>
     <div class="table-controls card">
-        <input type="text" id="searchWorker" placeholder="🔍 ابحث هنا..." oninput="searchTable('workers')">
+        <input type="text" id="searchWorker" placeholder="🔍 ابحث بالاسم..." oninput="searchTable('workers')">
         <button class="export-btn" onclick="exportToExcel('workersTable', 'عمال_المزرعة')">📥 تصدير Excel</button>
     </div>
     <table id="workersTable"></table>
@@ -56,7 +56,7 @@
         <button onclick="addFeed()">➕ إضافة</button>
     </div>
     <div class="table-controls card">
-        <input type="text" id="searchFeed" placeholder="🔍 ابحث هنا..." oninput="searchTable('feeds')">
+        <input type="text" id="searchFeed" placeholder="🔍 ابحث بالعلف..." oninput="searchTable('feeds')">
         <button class="export-btn" onclick="exportToExcel('feedsTable', 'أعلاف_المزرعة')">📥 تصدير Excel</button>
     </div>
     <table id="feedsTable"></table>
@@ -72,7 +72,7 @@
         <button onclick="addVisit()">➕ إضافة</button>
     </div>
     <div class="table-controls card">
-        <input type="text" id="searchVisit" placeholder="🔍 ابحث هنا..." oninput="searchTable('visits')">
+        <input type="text" id="searchVisit" placeholder="🔍 ابحث بالطبيب أو التشخيص..." oninput="searchTable('visits')">
         <button class="export-btn" onclick="exportToExcel('visitsTable', 'زيارات_المزرعة')">📥 تصدير Excel</button>
     </div>
     <table id="visitsTable"></table>
