@@ -1,0 +1,62 @@
+body {
+  margin: 0;
+  font-family: Arial;
+  display: flex;
+}
+
+.sidebar {
+  width: 220px;
+  background: #1f2937;
+  color: white;
+  height: 100vh;
+  padding: 20px;
+}
+
+.sidebar button {
+  width: 100%;
+  margin: 5px 0;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  background: #374151;
+  color: white;
+}
+
+.sidebar button:hover {
+  background: #4b5563;
+}
+
+.main {
+  flex: 1;
+  padding: 20px;
+}
+
+.section {
+  display: none;
+}
+
+.section.active {
+  display: block;
+}
+
+input {
+  padding: 8px;
+  margin: 5px;
+}
+
+button {
+  padding: 8px 12px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+table {
+  width: 100%;
+  margin-top: 10px;
+  border-collapse: collapse;
+}
+
+td, th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
