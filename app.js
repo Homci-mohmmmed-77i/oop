@@ -23,31 +23,32 @@ function clearInputs() {
 // ==========================================
 // 4. قيود الإدخال اللحظية (التي طلبتها)
 // ==========================================
-
 window.onload = () => {
-  // قيد: خانة "النوع" و "الاسم" و "الطبيب" لا تقبل أرقام أبداً
-  const textInputs = ['a_type', 'w_name', 'w_job', 'v_vet'];
+  // قيد: الخانات النصية (لا تقبل أرقام أبداً)
+  // أضفت 'a_health' و 'v_diag' هنا
+  const textInputs = ['a_type', 'a_health', 'w_name', 'w_job', 'v_vet', 'v_diag'];
   textInputs.forEach(id => {
     const el = document.getElementById(id);
     if (el) {
       el.oninput = function() {
-        this.value = this.value.replace(/[0-9]/g, ''); // يمسح الأرقام فوراً
+        // يمسح أي أرقام فور كتابتها
+        this.value = this.value.replace(/[0-9]/g, ''); 
       };
     }
   });
 
-  // قيد: "الرقم التعريفي" 10 أرقام فقط ولا يقبل حروف
+  // قيد: الرقم التعريفي (10 أرقام فقط)
   const codeInput = document.getElementById('a_code');
   if (codeInput) {
     codeInput.oninput = function() {
-      this.value = this.value.replace(/[^0-9]/g, ''); // يمسح أي شيء ليس رقماً
+      this.value = this.value.replace(/[^0-9]/g, ''); 
       if (this.value.length > 10) {
-        this.value = this.value.slice(0, 10); // يمنع كتابة أكثر من 10 أرقام
+        this.value = this.value.slice(0, 10); 
       }
     };
   }
 
-  // قيد: "العمر" و "الهاتف" و "الكمية" أرقام فقط
+  // قيد: خانات الأرقام (أرقام فقط)
   const numInputs = ['a_age', 'w_phone', 'f_qty'];
   numInputs.forEach(id => {
     const el = document.getElementById(id);
