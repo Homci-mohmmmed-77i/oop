@@ -1,177 +1,208 @@
+/* الألوان والخطوط الأساسية */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Arial", sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
   display: flex;
   direction: rtl;
-  background: #f1f5f9; /* خلفية أفتح وأهدأ */
-  color: #334155; /* لون نص رمادي غامق بدل الأسود الصريح */
+  background: #f1f5f9; /* خلفية رمادية فاتحة جداً مريحة للعين */
+  color: #334155;
 }
 
-/* ===== Sidebar ===== */
+/* ===== القائمة الجانبية (Sidebar) ===== */
 .sidebar {
-  width: 240px;
+  width: 260px;
   height: 100vh;
-  background: linear-gradient(180deg, #334155, #475569); /* ألوان هادئة للمستطيل الجانبي */
+  background: linear-gradient(180deg, #334155, #475569); /* تدرج رمادي مزرق احترافي */
   color: white;
-  padding: 20px;
+  padding: 25px 15px;
   position: fixed;
   box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+  z-index: 1000;
 }
 
 .sidebar h2 {
-  margin-bottom: 25px;
-  font-size: 20px;
-  color: #cbd5e1; /* لون فاتح هادئ للعناوين */
+  margin-bottom: 30px;
+  font-size: 22px;
+  text-align: center;
+  color: #f1f5f9;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 15px;
 }
 
 .sidebar button {
   width: 100%;
-  padding: 12px;
-  margin: 6px 0;
+  padding: 14px;
+  margin: 8px 0;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   background: rgba(255,255,255,0.05);
   color: #f1f5f9;
   cursor: pointer;
-  transition: 0.3s;
+  transition: all 0.3s ease;
   text-align: right;
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .sidebar button:hover {
-  background: #64748b; /* لون رمادي مزرق متوسط عند التمرير */
-  color: white;
-  transform: translateX(-3px);
+  background: #64748b;
+  transform: translateX(-5px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
-/* ===== Main ===== */
+/* ===== المحتوى الرئيسي ===== */
 .main {
-  margin-right: 240px;
+  margin-right: 260px;
   flex: 1;
-  padding: 30px;
+  padding: 40px;
   min-height: 100vh;
 }
-/* إخفاء جميع الأقسام افتراضياً */
+
+/* الأقسام */
 .section {
-  display: none; 
+  display: none; /* مخفي افتراضياً */
+  animation: fadeIn 0.5s ease;
 }
 
-/* إظهار القسم الذي يحمل كلاس active فقط */
 .section.active {
-  display: block;
+  display: block; /* يظهر فقط عند النشاط */
 }
-/* ===== Section ===== */
-.section {
-  display: none;
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* تحسين العناوين */
+h2 {
+  margin-bottom: 20px;
+  color: #1e293b;
+  font-size: 24px;
+}
+
+/* ===== تصميم البطاقات (Cards) والمدخلات ===== */
+.input-container.card {
   background: white;
   padding: 25px;
-  border-radius: 14px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.05);
-  border-top: 4px solid #94a3b8; /* شريط علوي بلون رمادي هادئ */
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  margin-bottom: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: center;
 }
 
-.section.active {
-  display: block;
-}
-
-/* ===== Title ===== */
-h2 {
-  margin-bottom: 15px;
-  color: #1e293b;
-}
-
-/* ===== Inputs ===== */
 input {
-  padding: 10px 12px;
-  margin: 6px;
+  padding: 12px 15px;
   border: 1px solid #cbd5e1;
   border-radius: 10px;
-  width: 200px;
   outline: none;
-  transition: 0.2s;
+  transition: 0.3s;
   background: #f8fafc;
+  min-width: 180px;
+  flex: 1;
 }
 
 input:focus {
-  border-color: #94a3b8;
-  box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.2);
+  border-color: #64748b;
+  box-shadow: 0 0 0 3px rgba(100, 116, 139, 0.1);
+  background: white;
 }
 
-/* ===== Buttons ===== */
+/* الأزرار */
 button {
-  padding: 10px 14px;
-  margin: 6px;
+  padding: 12px 20px;
   border: none;
   border-radius: 10px;
-  background: #475569; /* لون الأزرار الأساسي الهادئ */
+  background: #475569; /* لون هادئ */
   color: white;
   cursor: pointer;
   transition: 0.3s;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 button:hover {
-  background: #334155; /* درجة أغمق قليلاً عند التمرير */
+  background: #334155;
   transform: translateY(-2px);
 }
 
-/* ===== Table ===== */
+/* زر التصدير (أخضر) */
+.export-btn {
+  background: #10b981 !important;
+  margin-right: 10px;
+}
+
+.export-btn:hover {
+  background: #059669 !important;
+}
+
+/* ===== خانة البحث (Search) ===== */
+.table-controls {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+
+.table-controls input {
+  max-width: 400px;
+  border: 2px solid #e2e8f0;
+}
+
+/* ===== الجداول (Tables) ===== */
 table {
   width: 100%;
-  margin-top: 20px;
   border-collapse: collapse;
   background: white;
-  border-radius: 12px;
+  border-radius: 15px;
   overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
 }
 
 th {
-  background: linear-gradient(90deg, #64748b, #94a3b8); /* تدرج ألوان هادئ لرأس الجدول */
+  background: linear-gradient(90deg, #64748b, #94a3b8);
   color: white;
-  padding: 12px;
-  font-size: 14px;
+  padding: 15px;
+  font-size: 15px;
+  text-align: center;
 }
 
 td {
-  padding: 12px;
+  padding: 14px;
   text-align: center;
   border-bottom: 1px solid #f1f5f9;
+  font-size: 14px;
+}
+
+tr:last-child td {
+  border-bottom: none;
 }
 
 tr:hover {
-  background: #f8fafc;
+  background-color: #f8fafc;
 }
 
-/* ===== Cards ===== */
-.card {
-  flex: 1;
-  background: linear-gradient(135deg, #ffffff, #f8fafc);
-  padding: 15px;
-  border-radius: 14px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-  text-align: center;
-  font-weight: bold;
-  border-left: 4px solid #94a3b8;
+/* أزرار الحذف والتعديل داخل الجدول */
+td button {
+  padding: 6px 10px;
+  font-size: 12px;
+  margin: 2px;
 }
 
-/* ===== Responsive ===== */
+/* التجاوب مع الجوال */
 @media (max-width: 768px) {
-  .sidebar {
-    width: 180px;
-  }
-
-  .main {
-    margin-right: 180px;
-    padding: 15px;
-  }
-
-  input {
-    width: 100%;
-  }
+  .sidebar { width: 80px; padding: 10px 5px; }
+  .sidebar h2 { display: none; }
+  .sidebar button { font-size: 20px; text-align: center; }
+  .main { margin-right: 80px; padding: 20px; }
+  .input-container.card { flex-direction: column; align-items: stretch; }
+  .table-controls { flex-direction: column; gap: 10px; }
 }
