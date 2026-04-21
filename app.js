@@ -12,6 +12,18 @@ class Storage {
 let editId = null;
 let editType = null;
 
+// دالة لتنظيف جميع مدخلات الإدخال بعد الإضافة أو التعديل
+function clearInputs() {
+  const inputs = document.querySelectorAll('input');
+  inputs.forEach(input => input.value = '');
+}
+
+// دالة للتنقل بين الأقسام (التي تستدعيها الأزرار في HTML)
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
 /* ================== ANIMALS ================== */
 
 function addAnimal() {
@@ -28,7 +40,6 @@ function addAnimal() {
           }
         : a
     );
-
     editId = null;
     editType = null;
   } else {
@@ -43,19 +54,12 @@ function addAnimal() {
 
   Storage.set("animals", data);
   renderAnimals();
+  clearInputs(); // تنظيف الخانات
 }
 
 function renderAnimals() {
   let data = Storage.get("animals");
-
-  let table = `
-  <tr>
-    <th>النوع</th>
-    <th>العمر</th>
-    <th>الصحة</th>
-    <th>الكود</th>
-    <th>إجراءات</th>
-  </tr>`;
+  let table = `<tr><th>النوع</th><th>العمر</th><th>الصحة</th><th>الكود</th><th>إجراءات</th></tr>`;
 
   data.forEach(a => {
     table += `
@@ -70,19 +74,16 @@ function renderAnimals() {
         </td>
       </tr>`;
   });
-
   animalsTable.innerHTML = table;
 }
 
 function editAnimal(id) {
   let data = Storage.get("animals");
   let item = data.find(a => a.id === id);
-
   a_type.value = item.type;
   a_age.value = item.age;
   a_health.value = item.health;
   a_code.value = item.code;
-
   editId = id;
   editType = "animal";
 }
@@ -101,40 +102,22 @@ function addWorker() {
 
   if (editType === "worker") {
     data = data.map(w =>
-      w.id === editId
-        ? { ...w,
-            name: w_name.value,
-            job: w_job.value,
-            phone: w_phone.value
-          }
-        : w
+      w.id === editId ? { ...w, name: w_name.value, job: w_job.value, phone: w_phone.value } : w
     );
-
     editId = null;
     editType = null;
   } else {
-    data.push({
-      id: Date.now(),
-      name: w_name.value,
-      job: w_job.value,
-      phone: w_phone.value
-    });
+    data.push({ id: Date.now(), name: w_name.value, job: w_job.value, phone: w_phone.value });
   }
 
   Storage.set("workers", data);
   renderWorkers();
+  clearInputs(); // تنظيف الخانات
 }
 
 function renderWorkers() {
   let data = Storage.get("workers");
-
-  let table = `
-  <tr>
-    <th>الاسم</th>
-    <th>الوظيفة</th>
-    <th>الهاتف</th>
-    <th>إجراءات</th>
-  </tr>`;
+  let table = `<tr><th>الاسم</th><th>الوظيفة</th><th>الهاتف</th><th>إجراءات</th></tr>`;
 
   data.forEach(w => {
     table += `
@@ -148,18 +131,15 @@ function renderWorkers() {
         </td>
       </tr>`;
   });
-
   workersTable.innerHTML = table;
 }
 
 function editWorker(id) {
   let data = Storage.get("workers");
   let item = data.find(w => w.id === id);
-
   w_name.value = item.name;
   w_job.value = item.job;
   w_phone.value = item.phone;
-
   editId = id;
   editType = "worker";
 }
@@ -177,38 +157,21 @@ function addFeed() {
   let data = Storage.get("feeds");
 
   if (editType === "feed") {
-    data = data.map(f =>
-      f.id === editId
-        ? { ...f,
-            name: f_name.value,
-            qty: f_qty.value
-          }
-        : f
-    );
-
+    data = data.map(f => f.id === editId ? { ...f, name: f_name.value, qty: f_qty.value } : f);
     editId = null;
     editType = null;
   } else {
-    data.push({
-      id: Date.now(),
-      name: f_name.value,
-      qty: f_qty.value
-    });
+    data.push({ id: Date.now(), name: f_name.value, qty: f_qty.value });
   }
 
   Storage.set("feeds", data);
   renderFeeds();
+  clearInputs(); // تنظيف الخانات
 }
 
 function renderFeeds() {
   let data = Storage.get("feeds");
-
-  let table = `
-  <tr>
-    <th>العلف</th>
-    <th>الكمية</th>
-    <th>إجراءات</th>
-  </tr>`;
+  let table = `<tr><th>العلف</th><th>الكمية</th><th>إجراءات</th></tr>`;
 
   data.forEach(f => {
     table += `
@@ -221,17 +184,14 @@ function renderFeeds() {
         </td>
       </tr>`;
   });
-
   feedsTable.innerHTML = table;
 }
 
 function editFeed(id) {
   let data = Storage.get("feeds");
   let item = data.find(f => f.id === id);
-
   f_name.value = item.name;
   f_qty.value = item.qty;
-
   editId = id;
   editType = "feed";
 }
@@ -251,16 +211,9 @@ function addVisit() {
   if (editType === "visit") {
     data = data.map(v =>
       v.id === editId
-        ? {
-            ...v,
-            vet: v_vet.value,
-            animal: v_animal.value,
-            date: v_date.value,
-            diag: v_diag.value
-          }
+        ? { ...v, vet: v_vet.value, animal: v_animal.value, date: v_date.value, diag: v_diag.value }
         : v
     );
-
     editId = null;
     editType = null;
   } else {
@@ -275,19 +228,12 @@ function addVisit() {
 
   Storage.set("visits", data);
   renderVisits();
+  clearInputs(); // تنظيف الخانات
 }
 
 function renderVisits() {
   let data = Storage.get("visits");
-
-  let table = `
-  <tr>
-    <th>الطبيب</th>
-    <th>الحيوان</th>
-    <th>التاريخ</th>
-    <th>التشخيص</th>
-    <th>إجراءات</th>
-  </tr>`;
+  let table = `<tr><th>الطبيب</th><th>الحيوان</th><th>التاريخ</th><th>التشخيص</th><th>إجراءات</th></tr>`;
 
   data.forEach(v => {
     table += `
@@ -302,19 +248,16 @@ function renderVisits() {
         </td>
       </tr>`;
   });
-
   visitsTable.innerHTML = table;
 }
 
 function editVisit(id) {
   let data = Storage.get("visits");
   let item = data.find(v => v.id === id);
-
   v_vet.value = item.vet;
   v_animal.value = item.animal;
   v_date.value = item.date;
   v_diag.value = item.diag;
-
   editId = id;
   editType = "visit";
 }
