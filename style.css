@@ -2,29 +2,31 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Arial, sans-serif;
+  font-family: "Arial", sans-serif;
 }
 
 body {
   display: flex;
   direction: rtl;
-  background: #f4f6f9;
-  color: #111;
+  background: #eef2f7;
+  color: #1f2937;
 }
 
 /* ===== Sidebar ===== */
 .sidebar {
   width: 240px;
   height: 100vh;
-  background: #1f2937;
+  background: linear-gradient(180deg, #0f172a, #1e293b);
   color: white;
   padding: 20px;
   position: fixed;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.2);
 }
 
 .sidebar h2 {
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   font-size: 20px;
+  color: #38bdf8;
 }
 
 .sidebar button {
@@ -32,16 +34,19 @@ body {
   padding: 12px;
   margin: 6px 0;
   border: none;
-  border-radius: 8px;
-  background: #374151;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.08);
   color: white;
   cursor: pointer;
-  transition: 0.2s;
+  transition: 0.3s;
   text-align: right;
+  font-size: 14px;
 }
 
 .sidebar button:hover {
-  background: #4b5563;
+  background: #38bdf8;
+  color: #0f172a;
+  transform: translateX(-3px);
 }
 
 /* ===== Main ===== */
@@ -50,29 +55,43 @@ body {
   flex: 1;
   padding: 30px;
   min-height: 100vh;
-  background: #f4f6f9;
 }
 
-/* ===== Sections ===== */
+/* ===== Section ===== */
 .section {
   display: none;
   background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  padding: 25px;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  border-top: 4px solid #38bdf8;
 }
 
 .section.active {
   display: block;
 }
 
+/* ===== Title ===== */
+h2 {
+  margin-bottom: 15px;
+  color: #0f172a;
+}
+
 /* ===== Inputs ===== */
 input {
-  padding: 10px;
+  padding: 10px 12px;
   margin: 6px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
   width: 200px;
+  outline: none;
+  transition: 0.2s;
+  background: #f9fafb;
+}
+
+input:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 3px rgba(56,189,248,0.2);
 }
 
 /* ===== Buttons ===== */
@@ -80,15 +99,17 @@ button {
   padding: 10px 14px;
   margin: 6px;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   background: #2563eb;
   color: white;
   cursor: pointer;
-  transition: 0.2s;
+  transition: 0.3s;
+  font-weight: bold;
 }
 
 button:hover {
   background: #1d4ed8;
+  transform: translateY(-2px);
 }
 
 /* ===== Table ===== */
@@ -97,22 +118,29 @@ table {
   margin-top: 20px;
   border-collapse: collapse;
   background: white;
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
 }
 
 th {
-  background: #f1f5f9;
-  font-weight: bold;
-}
-
-td, th {
+  background: linear-gradient(90deg, #38bdf8, #60a5fa);
+  color: white;
   padding: 12px;
-  border-bottom: 1px solid #eee;
-  text-align: center;
+  font-size: 14px;
 }
 
-/* ===== Dashboard Cards (اختياري لو تضيف إحصائيات) ===== */
+td {
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+tr:hover {
+  background: #f8fafc;
+}
+
+/* ===== Cards (لو تستخدم Dashboard) ===== */
 .stats {
   display: flex;
   gap: 15px;
@@ -121,12 +149,13 @@ td, th {
 
 .card {
   flex: 1;
-  background: white;
+  background: linear-gradient(135deg, #ffffff, #f1f5f9);
   padding: 15px;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  border-radius: 14px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
   text-align: center;
   font-weight: bold;
+  border-left: 4px solid #38bdf8;
 }
 
 /* ===== Responsive ===== */
