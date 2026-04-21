@@ -1,208 +1,243 @@
-/* الألوان والخطوط الأساسية */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+// --- التخزين ---
+class Storage {
+    static get(key) { return JSON.parse(localStorage.getItem(key)) || []; }
+    static set(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
 }
 
-body {
-  display: flex;
-  direction: rtl;
-  background: #f1f5f9; /* خلفية رمادية فاتحة جداً مريحة للعين */
-  color: #334155;
+let editId = null;
+let editType = null;
+
+// --- التنقل ---
+function showSection(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
 }
 
-/* ===== القائمة الجانبية (Sidebar) ===== */
-.sidebar {
-  width: 260px;
-  height: 100vh;
-  background: linear-gradient(180deg, #334155, #475569); /* تدرج رمادي مزرق احترافي */
-  color: white;
-  padding: 25px 15px;
-  position: fixed;
-  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-  z-index: 1000;
+// --- تنظيف الخانات ---
+function clearInputs() {
+    document.querySelectorAll('input').forEach(i => {
+        if(i.type !== 'date') i.value = '';
+    });
+    editId = null; editType = null;
 }
 
-.sidebar h2 {
-  margin-bottom: 30px;
-  font-size: 22px;
-  text-align: center;
-  color: #f1f5f9;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-  padding-bottom: 15px;
+// --- ميزة البحث الشاملة ---
+function searchTable(type) {
+    let inputId = "";
+    if (type === 'animals') inputId = 'searchAnimal';
+    else if (type === 'workers') inputId = 'searchWorker';
+    else if (type === 'feeds') inputId = 'searchFeed';
+    else if (type === 'visits') inputId = 'searchVisit';
+
+    let filter = document.getElementById(inputId).value.toLowerCase();
+    let table = document.getElementById(type + 'Table');
+    let tr = table.getElementsByTagName("tr");
+
+    for (let i = 1; i < tr.length; i++) {
+        let rowText = tr[i].textContent.toLowerCase();
+        tr[i].style.display = rowText.includes(filter) ? "" : "none";
+    }
 }
 
-.sidebar button {
-  width: 100%;
-  padding: 14px;
-  margin: 8px 0;
-  border: none;
-  border-radius: 12px;
-  background: rgba(255,255,255,0.05);
-  color: #f1f5f9;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-align: right;
-  font-size: 15px;
+// --- ميزة التصدير لـ Excel ---
+function exportToExcel(tableId, fileName) {
+    let table = document.getElementById(tableId);
+    let rows = Array.from(table.rows);
+    if(rows.length <= 1) return alert("لا توجد بيانات لتصديرها!");
+
+    let csvContent = rows.map(row => 
+        Array.from(row.cells).map(cell => cell.textContent).join(",")
+    ).join("\n");
+
+    let blob = new Blob(["\ufeff" + csvContent], { type: 'text/csv;charset=utf-8;' });
+    let link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = fileName + ".csv";
+    link.click();
 }
 
-.sidebar button:hover {
-  background: #64748b;
-  transform: translateX(-5px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+// --- القيود اللحظية (Validation) ---
+window.onload = () => {
+    const textInputs = ['a_type', 'a_health', 'w_name', 'w_job', 'v_vet', 'v_diag'];
+    textInputs.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.oninput = function() { this.value = this.value.replace(/[0-9]/g, ''); };
+    });
+
+    const codeInput = document.getElementById('a_code');
+    if (codeInput) {
+        codeInput.oninput = function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            if (this.value.length > 10) this.value = this.value.slice(0, 10);
+        };
+    }
+    
+    // تحميل البيانات لجميع الجداول عند البدء
+    renderAll();
+};
+
+function renderAll() {
+    renderAnimals(); renderWorkers(); renderFeeds(); renderVisits();
 }
 
-/* ===== المحتوى الرئيسي ===== */
-.main {
-  margin-right: 260px;
-  flex: 1;
-  padding: 40px;
-  min-height: 100vh;
+// ================== الحيوانات ==================
+function addAnimal() {
+    const type = document.getElementById('a_type').value.trim();
+    const age = document.getElementById('a_age').value.trim();
+    const health = document.getElementById('a_health').value.trim();
+    const code = document.getElementById('a_code').value.trim();
+
+    if (!type || !age || !health || !code) return alert("يرجى إكمال كافة البيانات");
+    if (code.length !== 10) return alert("الرقم التعريفي يجب أن يكون 10 أرقام");
+
+    let data = Storage.get("animals");
+    const obj = { id: editType === "animal" ? editId : Date.now(), type, age, health, code };
+    if (editType === "animal") data = data.map(a => a.id === editId ? obj : a);
+    else data.push(obj);
+
+    Storage.set("animals", data);
+    renderAnimals(); clearInputs();
 }
 
-/* الأقسام */
-.section {
-  display: none; /* مخفي افتراضياً */
-  animation: fadeIn 0.5s ease;
+function renderAnimals() {
+    let data = Storage.get("animals");
+    let table = document.getElementById('animalsTable');
+    let html = `<tr><th>النوع</th><th>العمر</th><th>الصحة</th><th>الكود</th><th>إجراءات</th></tr>`;
+    data.forEach(a => {
+        html += `<tr><td>${a.type}</td><td>${a.age}</td><td>${a.health}</td><td>${a.code}</td>
+        <td><button onclick="editAnimal(${a.id})">✏️</button><button onclick="deleteAnimal(${a.id})">🗑</button></td></tr>`;
+    });
+    table.innerHTML = html;
 }
 
-.section.active {
-  display: block; /* يظهر فقط عند النشاط */
+function editAnimal(id) {
+    let item = Storage.get("animals").find(a => a.id === id);
+    document.getElementById('a_type').value = item.type;
+    document.getElementById('a_age').value = item.age;
+    document.getElementById('a_health').value = item.health;
+    document.getElementById('a_code').value = item.code;
+    editId = id; editType = "animal";
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+function deleteAnimal(id) {
+    if(confirm("حذف؟")) {
+        Storage.set("animals", Storage.get("animals").filter(a => a.id !== id));
+        renderAnimals();
+    }
 }
 
-/* تحسين العناوين */
-h2 {
-  margin-bottom: 20px;
-  color: #1e293b;
-  font-size: 24px;
+// ================== العمال ==================
+function addWorker() {
+    const name = document.getElementById('w_name').value.trim();
+    const job = document.getElementById('w_job').value.trim();
+    const phone = document.getElementById('w_phone').value.trim();
+    if (!name || !job || !phone) return alert("أكمل البيانات");
+
+    let data = Storage.get("workers");
+    const obj = { id: editType === "worker" ? editId : Date.now(), name, job, phone };
+    if (editType === "worker") data = data.map(w => w.id === editId ? obj : w);
+    else data.push(obj);
+
+    Storage.set("workers", data);
+    renderWorkers(); clearInputs();
 }
 
-/* ===== تصميم البطاقات (Cards) والمدخلات ===== */
-.input-container.card {
-  background: white;
-  padding: 25px;
-  border-radius: 16px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-  margin-bottom: 30px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  align-items: center;
+function renderWorkers() {
+    let data = Storage.get("workers");
+    let html = `<tr><th>الاسم</th><th>الوظيفة</th><th>الهاتف</th><th>إجراءات</th></tr>`;
+    data.forEach(w => {
+        html += `<tr><td>${w.name}</td><td>${w.job}</td><td>${w.phone}</td>
+        <td><button onclick="editWorker(${w.id})">✏️</button><button onclick="deleteWorker(${w.id})">🗑</button></td></tr>`;
+    });
+    document.getElementById('workersTable').innerHTML = html;
 }
 
-input {
-  padding: 12px 15px;
-  border: 1px solid #cbd5e1;
-  border-radius: 10px;
-  outline: none;
-  transition: 0.3s;
-  background: #f8fafc;
-  min-width: 180px;
-  flex: 1;
+function editWorker(id) {
+    let item = Storage.get("workers").find(w => w.id === id);
+    document.getElementById('w_name').value = item.name;
+    document.getElementById('w_job').value = item.job;
+    document.getElementById('w_phone').value = item.phone;
+    editId = id; editType = "worker";
 }
 
-input:focus {
-  border-color: #64748b;
-  box-shadow: 0 0 0 3px rgba(100, 116, 139, 0.1);
-  background: white;
+function deleteWorker(id) {
+    Storage.set("workers", Storage.get("workers").filter(w => w.id !== id));
+    renderWorkers();
 }
 
-/* الأزرار */
-button {
-  padding: 12px 20px;
-  border: none;
-  border-radius: 10px;
-  background: #475569; /* لون هادئ */
-  color: white;
-  cursor: pointer;
-  transition: 0.3s;
-  font-weight: 600;
+// ================== الأعلاف ==================
+function addFeed() {
+    const name = document.getElementById('f_name').value.trim();
+    const qty = document.getElementById('f_qty').value.trim();
+    if (!name || !qty) return alert("أكمل البيانات");
+
+    let data = Storage.get("feeds");
+    const obj = { id: editType === "feed" ? editId : Date.now(), name, qty };
+    if (editType === "feed") data = data.map(f => f.id === editId ? obj : f);
+    else data.push(obj);
+
+    Storage.set("feeds", data);
+    renderFeeds(); clearInputs();
 }
 
-button:hover {
-  background: #334155;
-  transform: translateY(-2px);
+function renderFeeds() {
+    let data = Storage.get("feeds");
+    let html = `<tr><th>العلف</th><th>الكمية</th><th>إجراءات</th></tr>`;
+    data.forEach(f => {
+        html += `<tr><td>${f.name}</td><td>${f.qty}</td><td><button onclick="editFeed(${f.id})">✏️</button><button onclick="deleteFeed(${f.id})">🗑</button></td></tr>`;
+    });
+    document.getElementById('feedsTable').innerHTML = html;
 }
 
-/* زر التصدير (أخضر) */
-.export-btn {
-  background: #10b981 !important;
-  margin-right: 10px;
+function editFeed(id) {
+    let item = Storage.get("feeds").find(f => f.id === id);
+    document.getElementById('f_name').value = item.name;
+    document.getElementById('f_qty').value = item.qty;
+    editId = id; editType = "feed";
 }
 
-.export-btn:hover {
-  background: #059669 !important;
+function deleteFeed(id) {
+    Storage.set("feeds", Storage.get("feeds").filter(f => f.id !== id));
+    renderFeeds();
 }
 
-/* ===== خانة البحث (Search) ===== */
-.table-controls {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 15px;
-  background: white;
-  padding: 15px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+// ================== الزيارات ==================
+function addVisit() {
+    const vet = document.getElementById('v_vet').value.trim();
+    const animal = document.getElementById('v_animal').value.trim();
+    const date = document.getElementById('v_date').value;
+    const diag = document.getElementById('v_diag').value.trim();
+    if (!vet || !animal || !date || !diag) return alert("أكمل البيانات");
+
+    let data = Storage.get("visits");
+    const obj = { id: editType === "visit" ? editId : Date.now(), vet, animal, date, diag };
+    if (editType === "visit") data = data.map(v => v.id === editId ? obj : v);
+    else data.push(obj);
+
+    Storage.set("visits", data);
+    renderVisits(); clearInputs();
 }
 
-.table-controls input {
-  max-width: 400px;
-  border: 2px solid #e2e8f0;
+function renderVisits() {
+    let data = Storage.get("visits");
+    let html = `<tr><th>الطبيب</th><th>رقم الحيوان</th><th>التاريخ</th><th>التشخيص</th><th>إجراءات</th></tr>`;
+    data.forEach(v => {
+        html += `<tr><td>${v.vet}</td><td>${v.animal}</td><td>${v.date}</td><td>${v.diag}</td>
+        <td><button onclick="editVisit(${v.id})">✏️</button><button onclick="deleteVisit(${v.id})">🗑</button></td></tr>`;
+    });
+    document.getElementById('visitsTable').innerHTML = html;
 }
 
-/* ===== الجداول (Tables) ===== */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: white;
-  border-radius: 15px;
-  overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+function editVisit(id) {
+    let item = Storage.get("visits").find(v => v.id === id);
+    document.getElementById('v_vet').value = item.vet;
+    document.getElementById('v_animal').value = item.animal;
+    document.getElementById('v_date').value = item.date;
+    document.getElementById('v_diag').value = item.diag;
+    editId = id; editType = "visit";
 }
 
-th {
-  background: linear-gradient(90deg, #64748b, #94a3b8);
-  color: white;
-  padding: 15px;
-  font-size: 15px;
-  text-align: center;
-}
-
-td {
-  padding: 14px;
-  text-align: center;
-  border-bottom: 1px solid #f1f5f9;
-  font-size: 14px;
-}
-
-tr:last-child td {
-  border-bottom: none;
-}
-
-tr:hover {
-  background-color: #f8fafc;
-}
-
-/* أزرار الحذف والتعديل داخل الجدول */
-td button {
-  padding: 6px 10px;
-  font-size: 12px;
-  margin: 2px;
-}
-
-/* التجاوب مع الجوال */
-@media (max-width: 768px) {
-  .sidebar { width: 80px; padding: 10px 5px; }
-  .sidebar h2 { display: none; }
-  .sidebar button { font-size: 20px; text-align: center; }
-  .main { margin-right: 80px; padding: 20px; }
-  .input-container.card { flex-direction: column; align-items: stretch; }
-  .table-controls { flex-direction: column; gap: 10px; }
+function deleteVisit(id) {
+    Storage.set("visits", Storage.get("visits").filter(v => v.id !== id));
+    renderVisits();
 }
