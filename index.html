@@ -24,11 +24,10 @@
         <input id="a_age" placeholder="العمر">
         <input id="a_health" placeholder="الحالة الصحية">
         <input id="a_code" placeholder="الرقم التعريفي (10 أرقام)">
-        <button onclick="addAnimal()">➕ إضافة حيوان</button>
+        <button onclick="addAnimal()">➕ إضافة</button>
     </div>
-    
-    <div class="table-controls">
-        <input type="text" id="searchAnimal" placeholder="🔍 ابحث بالنوع أو الكود..." oninput="searchTable('animals')">
+    <div class="table-controls card">
+        <input type="text" id="searchAnimal" placeholder="🔍 ابحث هنا..." oninput="searchTable('animals')">
         <button class="export-btn" onclick="exportToExcel('animalsTable', 'حيوانات_المزرعة')">📥 تصدير Excel</button>
     </div>
     <table id="animalsTable"></table>
@@ -40,15 +39,45 @@
         <input id="w_name" placeholder="الاسم">
         <input id="w_job" placeholder="الوظيفة">
         <input id="w_phone" placeholder="الهاتف">
-        <button onclick="addWorker()">➕ إضافة عامل</button>
+        <button onclick="addWorker()">➕ إضافة</button>
     </div>
-    <div class="table-controls">
-        <input type="text" id="searchWorker" placeholder="🔍 ابحث بالاسم..." oninput="searchTable('workers')">
+    <div class="table-controls card">
+        <input type="text" id="searchWorker" placeholder="🔍 ابحث هنا..." oninput="searchTable('workers')">
+        <button class="export-btn" onclick="exportToExcel('workersTable', 'عمال_المزرعة')">📥 تصدير Excel</button>
     </div>
     <table id="workersTable"></table>
   </section>
-  
-  </div>
+
+  <section id="feeds" class="section">
+    <h2>الأعلاف</h2>
+    <div class="input-container card">
+        <input id="f_name" placeholder="اسم العلف">
+        <input id="f_qty" placeholder="الكمية">
+        <button onclick="addFeed()">➕ إضافة</button>
+    </div>
+    <div class="table-controls card">
+        <input type="text" id="searchFeed" placeholder="🔍 ابحث هنا..." oninput="searchTable('feeds')">
+        <button class="export-btn" onclick="exportToExcel('feedsTable', 'أعلاف_المزرعة')">📥 تصدير Excel</button>
+    </div>
+    <table id="feedsTable"></table>
+  </section>
+
+  <section id="visits" class="section">
+    <h2>الزيارات البيطرية</h2>
+    <div class="input-container card">
+        <input id="v_vet" placeholder="اسم الطبيب">
+        <input id="v_animal" placeholder="رقم الحيوان">
+        <input id="v_date" type="date">
+        <input id="v_diag" placeholder="التشخيص">
+        <button onclick="addVisit()">➕ إضافة</button>
+    </div>
+    <div class="table-controls card">
+        <input type="text" id="searchVisit" placeholder="🔍 ابحث هنا..." oninput="searchTable('visits')">
+        <button class="export-btn" onclick="exportToExcel('visitsTable', 'زيارات_المزرعة')">📥 تصدير Excel</button>
+    </div>
+    <table id="visitsTable"></table>
+  </section>
+</div>
 
 <script src="app.js"></script>
 </body>
