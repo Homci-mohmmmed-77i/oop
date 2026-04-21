@@ -1,196 +1,84 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة مزارع تربية المواشي</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { display: flex; background: #f1f5f9; color: #334155; }
-        .sidebar { width: 260px; height: 100vh; background: #1e293b; color: white; padding: 20px; position: fixed; }
-        .sidebar h2 { text-align: center; margin-bottom: 30px; font-size: 1.2rem; border-bottom: 1px solid #334155; padding-bottom: 10px; }
-        .sidebar button { width: 100%; padding: 12px; margin: 5px 0; border: none; border-radius: 8px; background: #334155; color: white; cursor: pointer; text-align: right; transition: 0.3s; }
-        .sidebar button:hover { background: #475569; transform: translateX(-5px); }
-        .main { margin-right: 260px; flex: 1; padding: 30px; }
-        .section { display: none; animation: fadeIn 0.4s ease; }
-        .section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        .input-group { display: flex; flex-wrap: wrap; gap: 10px; }
-        input, select { padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; flex: 1; min-width: 150px; }
-        .btn-add { background: #0f172a; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
-        .btn-export { background: #10b981; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; float: left; }
-        .search-bar { width: 100%; margin: 15px 0; padding: 10px; border: 2px solid #e2e8f0; border-radius: 8px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; border-radius: 8px; overflow: hidden; }
-        th { background: #64748b; color: white; padding: 12px; }
-        td { padding: 12px; text-align: center; border-bottom: 1px solid #f1f5f9; }
-        .btn-del { background: #ef4444; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نظام إدارة المزرعة الذكي</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
 <div class="sidebar">
-    <h2>🚜 إدارة المزرعة</h2>
-    <button onclick="showSection('animals')">🐄 الحيوانات</button>
-    <button onclick="showSection('workers')">👨‍🌾 الموظفين</button>
-    <button onclick="showSection('feeds')">🌾 الأعلاف</button>
-    <button onclick="showSection('visits')">🩺 الزيارات الطبية</button>
-    <button onclick="showSection('finance')">💰 البيع والشراء</button>
+  <h2>🚜 إدارة المزرعة</h2>
+  <button onclick="showSection('animals')">🐄 الحيوانات</button>
+  <button onclick="showSection('workers')">👨‍🌾 العمال</button>
+  <button onclick="showSection('feeds')">🌾 الأعلاف</button>
+  <button onclick="showSection('visits')">🩺 الزيارات البيطرية</button>
 </div>
 
 <div class="main">
-    <section id="animals" class="section active">
-        <h2>أصناف الحيوانات</h2>
-        <div class="card"><div class="input-group">
-            <input id="a_type" placeholder="النوع">
-            <input id="a_age" type="number" placeholder="العمر">
-            <input id="a_health" placeholder="الحالة الصحية">
-            <input id="a_code" placeholder="الكود (10 أرقام)">
-            <button class="btn-add" onclick="addItem('animals')">إضافة</button>
-        </div></div>
-        <button class="btn-export" onclick="exportData('animalsTable')">تصدير Excel</button>
-        <input class="search-bar" placeholder="بحث..." oninput="search('animals')">
-        <table id="animalsTable"></table>
-    </section>
+  <section id="animals" class="section active">
+    <h2>إدارة الحيوانات</h2>
+    <div class="input-container card">
+        <input id="a_type" placeholder="النوع">
+        <input id="a_age" placeholder="العمر">
+        <input id="a_health" placeholder="الحالة الصحية">
+        <input id="a_code" placeholder="الرقم التعريفي (10 أرقام)">
+        <button onclick="addAnimal()">➕ إضافة</button>
+    </div>
+    <div class="table-controls card">
+        <input type="text" id="searchAnimal" placeholder="🔍 ابحث بالنوع أو الكود..." oninput="searchTable('animals')">
+        <button class="export-btn" onclick="exportToExcel('animalsTable', 'حيوانات_المزرعة')">📥 تصدير Excel</button>
+    </div>
+    <table id="animalsTable"></table>
+  </section>
 
-    <section id="workers" class="section">
-        <h2>إدارة الموظفين</h2>
-        <div class="card"><div class="input-group">
-            <input id="w_name" placeholder="الاسم">
-            <input id="w_job" placeholder="الوظيفة">
-            <input id="w_phone" placeholder="الهاتف">
-            <button class="btn-add" onclick="addItem('workers')">إضافة</button>
-        </div></div>
-        <button class="btn-export" onclick="exportData('workersTable')">تصدير Excel</button>
-        <input class="search-bar" placeholder="بحث..." oninput="search('workers')">
-        <table id="workersTable"></table>
-    </section>
+  <section id="workers" class="section">
+    <h2>إدارة العمال</h2>
+    <div class="input-container card">
+        <input id="w_name" placeholder="الاسم">
+        <input id="w_job" placeholder="الوظيفة">
+        <input id="w_phone" placeholder="الهاتف">
+        <button onclick="addWorker()">➕ إضافة</button>
+    </div>
+    <div class="table-controls card">
+        <input type="text" id="searchWorker" placeholder="🔍 ابحث بالاسم..." oninput="searchTable('workers')">
+        <button class="export-btn" onclick="exportToExcel('workersTable', 'عمال_المزرعة')">📥 تصدير Excel</button>
+    </div>
+    <table id="workersTable"></table>
+  </section>
 
-    <section id="feeds" class="section">
-        <h2>مخزون الأعلاف</h2>
-        <div class="card"><div class="input-group">
-            <input id="f_name" placeholder="نوع العلف">
-            <input id="f_qty" type="number" placeholder="الكمية">
-            <button class="btn-add" onclick="addItem('feeds')">إضافة</button>
-        </div></div>
-        <button class="btn-export" onclick="exportData('feedsTable')">تصدير Excel</button>
-        <input class="search-bar" placeholder="بحث..." oninput="search('feeds')">
-        <table id="feedsTable"></table>
-    </section>
+  <section id="feeds" class="section">
+    <h2>الأعلاف</h2>
+    <div class="input-container card">
+        <input id="f_name" placeholder="اسم العلف">
+        <input id="f_qty" placeholder="الكمية">
+        <button onclick="addFeed()">➕ إضافة</button>
+    </div>
+    <div class="table-controls card">
+        <input type="text" id="searchFeed" placeholder="🔍 ابحث بالعلف..." oninput="searchTable('feeds')">
+        <button class="export-btn" onclick="exportToExcel('feedsTable', 'أعلاف_المزرعة')">📥 تصدير Excel</button>
+    </div>
+    <table id="feedsTable"></table>
+  </section>
 
-    <section id="visits" class="section">
-        <h2>السجل الطبي</h2>
-        <div class="card"><div class="input-group">
-            <input id="v_vet" placeholder="الطبيب">
-            <input id="v_code" placeholder="كود الحيوان">
-            <input id="v_date" type="date">
-            <input id="v_diag" placeholder="التشخيص">
-            <button class="btn-add" onclick="addItem('visits')">إضافة</button>
-        </div></div>
-        <button class="btn-export" onclick="exportData('visitsTable')">تصدير Excel</button>
-        <input class="search-bar" placeholder="بحث..." oninput="search('visits')">
-        <table id="visitsTable"></table>
-    </section>
-
-    <section id="finance" class="section">
-        <h2>حركة البيع والشراء</h2>
-        <div class="card"><div class="input-group">
-            <input id="t_code" placeholder="كود الحيوان">
-            <select id="t_type"><option value="شراء">شراء</option><option value="بيع">بيع</option></select>
-            <input id="t_price" type="number" placeholder="السعر">
-            <input id="t_date" type="date">
-            <button class="btn-add" onclick="addItem('finance')">تسجيل</button>
-        </div></div>
-        <button class="btn-export" onclick="exportData('financeTable')">تصدير Excel</button>
-        <input class="search-bar" placeholder="بحث..." oninput="search('finance')">
-        <table id="financeTable"></table>
-    </section>
+  <section id="visits" class="section">
+    <h2>الزيارات البيطرية</h2>
+    <div class="input-container card">
+        <input id="v_vet" placeholder="اسم الطبيب">
+        <input id="v_animal" placeholder="رقم الحيوان">
+        <input id="v_date" type="date">
+        <input id="v_diag" placeholder="التشخيص">
+        <button onclick="addVisit()">➕ إضافة</button>
+    </div>
+    <div class="table-controls card">
+        <input type="text" id="searchVisit" placeholder="🔍 ابحث بالطبيب أو التشخيص..." oninput="searchTable('visits')">
+        <button class="export-btn" onclick="exportToExcel('visitsTable', 'زيارات_المزرعة')">📥 تصدير Excel</button>
+    </div>
+    <table id="visitsTable"></table>
+  </section>
 </div>
 
-<script>
-    // التخزين والمنطق
-    const db = {
-        get: (k) => JSON.parse(localStorage.getItem(k)) || [],
-        set: (k, d) => localStorage.setItem(k, JSON.stringify(d))
-    };
-
-    function showSection(id) {
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-    }
-
-    function addItem(type) {
-        let data = db.get(type);
-        let item = { id: Date.now() };
-        
-        if(type === 'animals') {
-            item = { ...item, type: f('a_type'), age: f('a_age'), health: f('a_health'), code: f('a_code') };
-            if(item.code.length !== 10) return alert("كود الحيوان يجب أن يكون 10 أرقام");
-        } else if(type === 'workers') {
-            item = { ...item, name: f('w_name'), job: f('w_job'), phone: f('w_phone') };
-        } else if(type === 'feeds') {
-            item = { ...item, name: f('f_name'), qty: f('f_qty') };
-        } else if(type === 'visits') {
-            item = { ...item, vet: f('v_vet'), code: f('v_code'), date: f('v_date'), diag: f('v_diag') };
-        } else if(type === 'finance') {
-            item = { ...item, code: f('t_code'), type: f('t_type'), price: f('t_price'), date: f('t_date') };
-        }
-
-        if(Object.values(item).some(v => v === "")) return alert("يرجى ملء الحقول");
-        data.push(item);
-        db.set(type, data);
-        render(type);
-        document.querySelectorAll('input').forEach(i => i.value = "");
-    }
-
-    function f(id) { return document.getElementById(id).value.trim(); }
-
-    function render(type) {
-        let data = db.get(type);
-        let html = '';
-        if(type === 'animals') {
-            html = '<tr><th>النوع</th><th>العمر</th><th>الصحة</th><th>الكود</th><th>حذف</th></tr>';
-            data.forEach(i => html += `<tr><td>${i.type}</td><td>${i.age}</td><td>${i.health}</td><td>${i.code}</td><td><button class="btn-del" onclick="del('${type}',${i.id})">🗑</button></td></tr>`);
-        } else if(type === 'workers') {
-            html = '<tr><th>الاسم</th><th>الوظيفة</th><th>الهاتف</th><th>حذف</th></tr>';
-            data.forEach(i => html += `<tr><td>${i.name}</td><td>${i.job}</td><td>${i.phone}</td><td><button class="btn-del" onclick="del('${type}',${i.id})">🗑</button></td></tr>`);
-        } else if(type === 'feeds') {
-            html = '<tr><th>العلف</th><th>الكمية</th><th>حذف</th></tr>';
-            data.forEach(i => html += `<tr><td>${i.name}</td><td>${i.qty}</td><td><button class="btn-del" onclick="del('${type}',${i.id})">🗑</button></td></tr>`);
-        } else if(type === 'visits') {
-            html = '<tr><th>الطبيب</th><th>الكود</th><th>التاريخ</th><th>التشخيص</th><th>حذف</th></tr>';
-            data.forEach(i => html += `<tr><td>${i.vet}</td><td>${i.code}</td><td>${i.date}</td><td>${i.diag}</td><td><button class="btn-del" onclick="del('${type}',${i.id})">🗑</button></td></tr>`);
-        } else if(type === 'finance') {
-            html = '<tr><th>الكود</th><th>النوع</th><th>السعر</th><th>التاريخ</th><th>حذف</th></tr>';
-            data.forEach(i => html += `<tr><td>${i.code}</td><td>${i.type}</td><td>${i.price}</td><td>${i.date}</td><td><button class="btn-del" onclick="del('${type}',${i.id})">🗑</button></td></tr>`);
-        }
-        document.getElementById(type + 'Table').innerHTML = html;
-    }
-
-    function del(type, id) {
-        db.set(type, db.get(type).filter(i => i.id !== id));
-        render(type);
-    }
-
-    function search(type) {
-        let val = event.target.value.toLowerCase();
-        let rows = document.getElementById(type + 'Table').rows;
-        for(let i = 1; i < rows.length; i++) {
-            rows[i].style.display = rows[i].innerText.toLowerCase().includes(val) ? '' : 'none';
-        }
-    }
-
-    function exportData(tableId) {
-        let table = document.getElementById(tableId);
-        let rows = Array.from(table.rows).map(r => Array.from(r.cells).map(c => c.innerText).slice(0,-1).join(",")).join("\n");
-        let blob = new Blob(["\ufeff" + rows], { type: 'text/csv;charset=utf-8;' });
-        let link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = "Farm_Report.csv";
-        link.click();
-    }
-
-    window.onload = () => ['animals','workers','feeds','visits','finance'].forEach(t => render(t));
-</script>
+<script src="app.js"></script>
 </body>
 </html>
