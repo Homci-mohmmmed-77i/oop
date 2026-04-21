@@ -7,7 +7,7 @@ class Storage {
 let editId = null;
 let editType = null;
 
-// --- دالة الانتقال بين الأقسام (حل المشكلة) ---
+// --- دالة الانتقال بين الأقسام ---
 function showSection(id) {
   const sections = document.querySelectorAll('.section');
   sections.forEach(s => s.classList.remove('active'));
@@ -32,7 +32,11 @@ function addAnimal() {
   const health = document.getElementById('a_health').value;
   const code = document.getElementById('a_code').value;
 
-  if(!type || !code) return alert("يرجى إدخال النوع والكود");
+  // التحقق من الحقول الفارغة
+  if(!type || !age || !health || !code) {
+      alert("يرجى ملء جميع خانات الحيوان");
+      return;
+  }
 
   let data = Storage.get("animals");
   if (editType === "animal") {
@@ -76,6 +80,11 @@ function addWorker() {
   const job = document.getElementById('w_job').value;
   const phone = document.getElementById('w_phone').value;
 
+  if(!name || !job || !phone) {
+      alert("يرجى إدخال كافة بيانات العامل");
+      return;
+  }
+
   let data = Storage.get("workers");
   if (editType === "worker") {
     data = data.map(w => w.id === editId ? {id: editId, name, job, phone} : w);
@@ -110,10 +119,16 @@ function deleteWorker(id) {
   renderWorkers();
 }
 
-/* ================== FEEDS (نفس النمط) ================== */
+/* ================== FEEDS ================== */
 function addFeed() {
   const name = document.getElementById('f_name').value;
   const qty = document.getElementById('f_qty').value;
+
+  if(!name || !qty) {
+      alert("يرجى إدخال اسم العلف والكمية");
+      return;
+  }
+
   let data = Storage.get("feeds");
   if (editType === "feed") {
     data = data.map(f => f.id === editId ? {id: editId, name, qty} : f);
@@ -150,6 +165,12 @@ function addVisit() {
   const animal = document.getElementById('v_animal').value;
   const date = document.getElementById('v_date').value;
   const diag = document.getElementById('v_diag').value;
+
+  if(!vet || !animal || !date || !diag) {
+      alert("يرجى ملء جميع بيانات الزيارة الطبية");
+      return;
+  }
+
   let data = Storage.get("visits");
   if (editType === "visit") {
     data = data.map(v => v.id === editId ? {id: editId, vet, animal, date, diag} : v);
