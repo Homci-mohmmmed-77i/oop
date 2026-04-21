@@ -56,7 +56,15 @@ body {
   padding: 30px;
   min-height: 100vh;
 }
+/* إخفاء جميع الأقسام افتراضياً */
+.section {
+  display: none; 
+}
 
+/* إظهار القسم الذي يحمل كلاس active فقط */
+.section.active {
+  display: block;
+}
 /* ===== Section ===== */
 .section {
   display: none;
